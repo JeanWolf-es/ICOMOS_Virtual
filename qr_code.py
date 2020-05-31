@@ -4,39 +4,40 @@
 Created on Mon May 25 17:23:32 2020
 
 @author: jeanwolf
-"""
-# pyqrcode; Image y PIL son las dependencias requeridas
-# pyqrcode genera los QR
-# Image convierte un png a JPG
 
+Para mas info sobre insertar texto en el documento
+https://recursospython.com/guias-y-manuales/anadir-texto-imagen-pillow/
+"""
 import pyqrcode
-from PIL import Image
-import os, sys
+from PIL import Image, ImageDraw, ImageFont
+# import os, sys
 import xlrd
 
-#Abrimos el fichero excel
-document = xlrd.open_workbook("data/planets.xlsx")
- 
-#Podemos guardar cada una de las hojas por separado
-Hoja1 = document.sheet_by_index(0)
-contenido_celda = Hoja1.cell_value(1,2)
-# conversatorio = "par"
-# pio = contenido_celda, conversatorio 
-# print(contenido_celda )
 #-----------------------------
+# Abrimos el fichero excel
+document = xlrd.open_workbook("data/name.xlsx")
 
-# crear QR
-# url =  pyqrcode.create(contenido_celda, error='L', version=8, mode='binary')
-# url.svg('imagen/code.svg', scale=16)
+# Leer las celdas del libro de nombres 
+Hoja1 = document.sheet_by_index(0)
+contenido_celda = Hoja1.cell_value(2,2)
+tex1 = Hoja1.cell_value(1,0)
+tex2 = Hoja1.cell_value(1,1)
 
-# crear PNG
-big_code = pyqrcode.create(contenido_celda, error='L', version=10, mode='binary')
-big_code.png('imagen/code.png', scale=10, module_color=[0, 0, 0, 128], background=[0xFF, 0xFF, 0xFF])
+print(tex2)
 
-# convertir PNG a JPG
-im = Image.open('imagen/code.png')
-rgb_im = im.convert('RGB')
-rgb_im.save('imagen/code.jpg', quality=95)
+# crear QR en formato PNG
+big_code = pyqrcode.create(contenido_celda, error='L', version=9, mode='binary')
+big_code.png('imagen/code.png', scale=5, module_color=[0, 0, 0, 128], background=None)
 
-#---------------------------------------------------
+
+image = Image.open("imagen/cdertificado_ICOMOS_Virtual.png")
+draw = ImageDraw.Draw(image)
+font = ImageFont.truetype("font/CASLFS__.TTF", 103)
+
+draw.text((500, 700), tex1, font=font, fill="black")
+draw.text((300, 1000), tex2, font=font, fill="blue")
+image.save("imagen/marte2.png")
+
+
+
 
